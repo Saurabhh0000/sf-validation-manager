@@ -159,24 +159,25 @@ function showAppSection() {
  * Get the logged-in user's name from Salesforce
  */
 function getUserInfo() {
-    fetch(instanceUrl + "/services/oauth2/userinfo", {
+    fetch(instanceUrl + "/services/data/v62.0/chatter/users/me", {
         headers: {
             "Authorization": "Bearer " + accessToken
         }
     })
     .then(res => res.json())
     .then(data => {
-        console.log("User Info:", data);
+        console.log("User Info (Chatter):", data);
 
         if (data.name) {
-            userDisplay.innerHTML = 
+            userDisplay.innerHTML =
                 `<i class="fa-solid fa-user-check"></i> ${data.name}`;
         } else {
             userDisplay.textContent = "User";
         }
     })
     .catch(err => {
-        console.log("Could not fetch user info:", err);
+        console.log("User API failed:", err);
+        userDisplay.textContent = "Logged In";
     });
 }
 
