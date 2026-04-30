@@ -169,8 +169,7 @@ function getUserInfo() {
         console.log("User Info (Chatter):", data);
 
         if (data.name) {
-            userDisplay.innerHTML =
-                `<i class="fa-solid fa-user-check"></i> ${data.name}`;
+            userDisplay.textContent = data.name;
         } else {
             userDisplay.textContent = "User";
         }
