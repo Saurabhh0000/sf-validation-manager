@@ -258,6 +258,10 @@ a:hover {
     flex-wrap: wrap;
     gap: 10px;
 }
+.fa-circle-check {
+    color: #28a745; /* green */
+    margin-right: 6px;
+}
 
 .user-info {
     display: flex;

@@ -54,7 +54,7 @@
           </div>
 
           <div class="btn-wrapper">
-            <button class="btn btn-primary btn-large">
+            <button id="login-btn" class="btn btn-primary btn-large">
               <i class="fa-solid fa-right-to-bracket"></i> Login to Salesforce
             </button>
           </div>
@@ -66,7 +66,10 @@
         <!-- User info bar -->
         <div class="user-bar card">
           <div class="user-info">
-            <span>✅ Connected as: <strong id="user-display"></strong></span>
+            <span
+              ><i class="fa-solid fa-circle-check"></i> Connected as:
+              <strong id="user-display"></strong
+            ></span>
             <span class="instance-url" id="instance-display"></span>
           </div>
           <button id="logout-btn" class="btn btn-outline btn-small">
@@ -77,10 +80,10 @@
         <!-- Toolbar with action buttons -->
         <div class="toolbar card">
           <button id="fetch-btn" class="btn btn-primary">
-            📥 Get Validation Rules
+            <i class="fa-solid fa-database"></i> Get Validation Rules
           </button>
           <button id="enable-all-btn" class="btn btn-success" disabled>
-            ✅ Enable All
+            <i class="fa-solid fa-circle-check"></i> Enable All
           </button>
           <button id="disable-all-btn" class="btn btn-warning" disabled>
             ❌ Disable All
