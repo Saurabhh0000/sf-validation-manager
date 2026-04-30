@@ -1,177 +1,134 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Manage Salesforce Account Validation Rules - Activate, Deactivate, and Deploy">
-    <title>SF Validation Rule Manager</title>
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Manage Salesforce Account Validation Rules - Activate, Deactivate, and Deploy" />
+    <title>Salesforce Validation Rule Manager</title>
+    <link rel="stylesheet" href="style.css" />
     <!-- Google Font for clean look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  </head>
+  <body>
     <!-- ===== HEADER ===== -->
     <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <span class="logo-icon">⚡</span>
-                <h1>SF Validation Manager</h1>
-            </div>
-            <p class="subtitle">Manage Account Validation Rules in your Salesforce Org</p>
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon"><i class="fa-solid fa-cloud"></i></span>
+          <h1>Salesforce Validation Manager</h1>
         </div>
+        <p class="subtitle">
+          Manage Account Validation Rules in your Salesforce Org
+        </p>
+      </div>
     </header>
 
     <!-- ===== MAIN CONTAINER ===== -->
     <main class="container">
+      <!-- LOGIN SECTION - shown when user is NOT logged in -->
+      <div id="login-section" class="card login-card">
+        <div class="login-content">
+          <div class="login-icon"><i class="fa-solid fa-lock"></i></div>
+          <h2>Connect to Salesforce</h2>
+          <p>
+            Log in with your Salesforce Developer Org to manage validation
+            rules.
+          </p>
 
-        <!-- LOGIN SECTION - shown when user is NOT logged in -->
-        <div id="login-section" class="card login-card">
-            <div class="login-content">
-                <div class="login-icon">🔐</div>
-                <h2>Connect to Salesforce</h2>
-                <p>Log in with your Salesforce Developer Org to manage validation rules.</p>
+          <!-- User enters their Connected App Client ID here -->
+          <div class="input-group">
+            <label for="client-id-input"
+              >Connected App Client ID (Consumer Key)</label
+            >
+            <input
+              type="text"
+              id="client-id-input"
+              placeholder="Paste your Consumer Key here..." />
+          </div>
 
-                <!-- User enters their Connected App Client ID here -->
-                <div class="input-group">
-                    <label for="client-id-input">Connected App Client ID (Consumer Key)</label>
-                    <input 
-                        type="text" 
-                        id="client-id-input" 
-                        placeholder="Paste your Consumer Key here..."
-                    >
-                </div>
+          <div class="btn-wrapper">
+            <button class="btn btn-primary btn-large">
+              <i class="fa-solid fa-right-to-bracket"></i> Login to Salesforce
+            </button>
+          </div>
+        </div>
+      </div>
 
-                <button id="login-btn" class="btn btn-primary btn-large">
-                    🔑 Login to Salesforce
-                </button>
-
-                <p class="help-text">
-                    Don't have a Connected App? 
-                    <a href="#setup-guide" onclick="document.getElementById('setup-guide').style.display='block'">
-                        See setup instructions below ↓
-                    </a>
-                </p>
-            </div>
+      <!-- APP SECTION - shown AFTER login -->
+      <div id="app-section" style="display: none">
+        <!-- User info bar -->
+        <div class="user-bar card">
+          <div class="user-info">
+            <span>✅ Connected as: <strong id="user-display"></strong></span>
+            <span class="instance-url" id="instance-display"></span>
+          </div>
+          <button id="logout-btn" class="btn btn-outline btn-small">
+            Logout
+          </button>
         </div>
 
-        <!-- APP SECTION - shown AFTER login -->
-        <div id="app-section" style="display: none;">
-
-            <!-- User info bar -->
-            <div class="user-bar card">
-                <div class="user-info">
-                    <span>✅ Connected as: <strong id="user-display"></strong></span>
-                    <span class="instance-url" id="instance-display"></span>
-                </div>
-                <button id="logout-btn" class="btn btn-outline btn-small">Logout</button>
-            </div>
-
-            <!-- Toolbar with action buttons -->
-            <div class="toolbar card">
-                <button id="fetch-btn" class="btn btn-primary">
-                    📥 Get Validation Rules
-                </button>
-                <button id="enable-all-btn" class="btn btn-success" disabled>
-                    ✅ Enable All
-                </button>
-                <button id="disable-all-btn" class="btn btn-warning" disabled>
-                    ❌ Disable All
-                </button>
-                <button id="deploy-btn" class="btn btn-deploy" disabled>
-                    🚀 Deploy Changes
-                </button>
-            </div>
-
-            <!-- Status message area -->
-            <div id="status-bar" class="status-bar" style="display: none;">
-                <p id="status-message"></p>
-            </div>
-
-            <!-- Validation Rules List -->
-            <div id="rules-container" class="rules-container">
-                <!-- Rules will be inserted here by JavaScript -->
-                <div class="empty-state">
-                    <p>👆 Click <strong>"Get Validation Rules"</strong> to fetch rules from your org.</p>
-                </div>
-            </div>
-
-            <!-- Changes summary -->
-            <div id="changes-summary" class="card changes-summary" style="display: none;">
-                <h3>📝 Pending Changes</h3>
-                <ul id="changes-list"></ul>
-            </div>
+        <!-- Toolbar with action buttons -->
+        <div class="toolbar card">
+          <button id="fetch-btn" class="btn btn-primary">
+            📥 Get Validation Rules
+          </button>
+          <button id="enable-all-btn" class="btn btn-success" disabled>
+            ✅ Enable All
+          </button>
+          <button id="disable-all-btn" class="btn btn-warning" disabled>
+            ❌ Disable All
+          </button>
+          <button id="deploy-btn" class="btn btn-deploy" disabled>
+            🚀 Deploy Changes
+          </button>
         </div>
 
-        <!-- SETUP GUIDE - hidden by default -->
-        <div id="setup-guide" class="card setup-guide" style="display: none;">
-            <h2>📋 Setup Instructions</h2>
-            <button class="close-btn" onclick="document.getElementById('setup-guide').style.display='none'">✕</button>
-            
-            <div class="steps">
-                <div class="step">
-                    <h3>Step 1: Create a Salesforce Developer Org</h3>
-                    <p>Go to <a href="https://developer.salesforce.com/signup" target="_blank">developer.salesforce.com/signup</a> and create a free developer org.</p>
-                </div>
-
-                <div class="step">
-                    <h3>Step 2: Create Validation Rules on Account</h3>
-                    <p>Go to <strong>Setup → Object Manager → Account → Validation Rules</strong> and create 4-5 validation rules. Example rules:</p>
-                    <ul>
-                        <li><strong>Phone Required</strong> – Phone cannot be empty</li>
-                        <li><strong>Website Format</strong> – Website must start with http</li>
-                        <li><strong>Industry Required</strong> – Industry must be selected</li>
-                        <li><strong>Rating Required</strong> – Rating cannot be blank</li>
-                        <li><strong>Annual Revenue Positive</strong> – Annual Revenue must be > 0</li>
-                    </ul>
-                </div>
-
-                <div class="step">
-                    <h3>Step 3: Create a Connected App</h3>
-                    <ol>
-                        <li>Go to <strong>Setup → App Manager → New Connected App</strong></li>
-                        <li>Fill in the name: <code>ValidationRuleManager</code></li>
-                        <li>Check <strong>"Enable OAuth Settings"</strong></li>
-                        <li>Set Callback URL to: <code>https://validation-manager-salesforce.netlify.app/index.html</code></li>
-                        <li>Add OAuth Scopes: <strong>Full access (full)</strong> and <strong>Manage user data via APIs (api)</strong></li>
-                        <li>Uncheck "Require Proof Key for Code Exchange (PKCE)"</li>
-                        <li>Save and wait 2-10 minutes for it to activate</li>
-                        <li>Copy the <strong>Consumer Key</strong> — you'll paste it in the app</li>
-                    </ol>
-                </div>
-
-                <div class="step">
-                    <h3>Step 4: Enable CORS</h3>
-                    <ol>
-                        <li>Go to <strong>Setup → CORS</strong></li>
-                        <li>Click <strong>New</strong></li>
-                        <li>Add: <code>https://validation-manager-salesforce.netlify.app</code></li>
-                        <li>Save</li>
-                    </ol>
-                </div>
-
-                <div class="step">
-                    <h3>Step 5: Run this App</h3>
-                    <p>Open this folder in VS Code and use the <strong>Live Server</strong> extension (port 5500) to run it. Then click the Login button!</p>
-                </div>
-            </div>
+        <!-- Status message area -->
+        <div id="status-bar" class="status-bar" style="display: none">
+          <p id="status-message"></p>
         </div>
 
+        <!-- Validation Rules List -->
+        <div id="rules-container" class="rules-container">
+          <!-- Rules will be inserted here by JavaScript -->
+          <div class="empty-state">
+            <p>
+              👆 Click <strong>"Get Validation Rules"</strong> to fetch rules
+              from your org.
+            </p>
+          </div>
+        </div>
+
+        <!-- Changes summary -->
+        <div
+          id="changes-summary"
+          class="card changes-summary"
+          style="display: none">
+          <h3>📝 Pending Changes</h3>
+          <ul id="changes-list"></ul>
+        </div>
+      </div>
     </main>
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
-        <p>SF Validation Manager &copy; 2026 | Built with HTML, CSS & JavaScript</p>
+      <p>Salesforce Validation Manager &copy; 2026 | Saurabh Kumar</p>
     </footer>
 
     <!-- Loading overlay -->
-    <div id="loading-overlay" class="loading-overlay" style="display: none;">
-        <div class="spinner"></div>
-        <p id="loading-text">Loading...</p>
+    <div id="loading-overlay" class="loading-overlay" style="display: none">
+      <div class="spinner"></div>
+      <p id="loading-text">Loading...</p>
     </div>
 
     <!-- JavaScript -->
     <script src="app.js"></script>
-
-</body>
+  </body>
 </html>
